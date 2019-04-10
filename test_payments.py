@@ -2,7 +2,7 @@ import requests
 import json
 
 
-class TestPayments(object):
+class TestPostPayments(object):
     products = ["sepa-credit-transfers", "instant-sepa-credit-transfers", "target-2-payments",
                 "cross-border-credit-transfers"]
     valid_content_type = "application/json"
@@ -30,7 +30,7 @@ class TestPayments(object):
     def test_happy_paths_for_all_products(self):
 
         for product in self.products:
-            r = self.v1_payments(product=product)
+            r = self.post_v1_payments(product=product)
             if r.status_code != 201:
                 error_messages = r.json()["tppMessages"][0]
                 print("Transaction status: {}".format(r.json()["transactionStatus"]))
@@ -46,7 +46,7 @@ class TestPayments(object):
     def test_happy_paths_for_all_products_mondatory_params_only(self):
 
         for product in self.products:
-            r = self.v1_payments(product=product,debtor_account_iban="",creditor_account_iban="", creditor_name="")
+            r = self.post_v1_payments(product=product,debtor_account_iban="",creditor_account_iban="", creditor_name="")
             if r.status_code != 201:
                 error_messages = r.json()["tppMessages"][0]
                 print("Transaction status: {}".format(r.json()["transactionStatus"]))
@@ -61,63 +61,63 @@ class TestPayments(object):
 
     def test_empty_product(self):
 
-        r = self.v1_payments(product="")
+        r = self.post_v1_payments(product="")
 
         assert r.status_code == 404
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_invalid_product(self):
 
-        r = self.v1_payments(product=self.invalid_product)
+        r = self.post_v1_payments(product=self.invalid_product)
 
         assert r.status_code == 404
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_empty_content_type(self):
 
-        r = self.v1_payments(content_type="")
+        r = self.post_v1_payments(content_type="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_invalid_content_type(self):
 
-        r = self.v1_payments(content_type=self.invalid_content_type)
+        r = self.post_v1_payments(content_type=self.invalid_content_type)
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_empty_x_request_id(self):
 
-        r = self.v1_payments(x_request_id="")
+        r = self.post_v1_payments(x_request_id="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_invalid_x_request_id(self):
 
-        r = self.v1_payments(x_request_id=self.invalid_x_request_id)
+        r = self.post_v1_payments(x_request_id=self.invalid_x_request_id)
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_empty_x_api_key(self):
 
-        r = self.v1_payments(x_api_key="")
+        r = self.post_v1_payments(x_api_key="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_invalid_x_api_key(self):
 
-        r = self.v1_payments(x_api_key=self.invalid_x_api_key)
+        r = self.post_v1_payments(x_api_key=self.invalid_x_api_key)
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_empty_tpp_redirect_uri(self):
 
-        r = self.v1_payments(tpp_redirect_uri="")
+        r = self.post_v1_payments(tpp_redirect_uri="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
@@ -125,7 +125,7 @@ class TestPayments(object):
     def test_invalid_tpp_redirect_uri(self):
 
         for invalid_tpp_redirect_uri in self.invalid_tpp_redirect_uri_list:
-            r = self.v1_payments(tpp_redirect_uri=invalid_tpp_redirect_uri)
+            r = self.post_v1_payments(tpp_redirect_uri=invalid_tpp_redirect_uri)
 
             if r.status_code != 400:
                 print("invalid_tpp_redirect_uri: {}".format(invalid_tpp_redirect_uri))
@@ -134,14 +134,14 @@ class TestPayments(object):
 
     def test_empty_psu_ip_address(self):
 
-        r = self.v1_payments(psu_ip_address="")
+        r = self.post_v1_payments(psu_ip_address="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
 
     def test_invalid_psu_ip_address(self):
 
-        r = self.v1_payments(psu_ip_address=self.invalid_psu_ip_address)
+        r = self.post_v1_payments(psu_ip_address=self.invalid_psu_ip_address)
 
         if r.status_code != 400:
             print("invalid_psu_ip_address: {}".format(self.invalid_psu_ip_address))
@@ -150,7 +150,7 @@ class TestPayments(object):
 
     def test_empty_instructed_amount_currency(self):
 
-        r = self.v1_payments(instructed_amount_currency="")
+        r = self.post_v1_payments(instructed_amount_currency="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
@@ -158,7 +158,7 @@ class TestPayments(object):
     def test_invalid_instructed_amount_currency(self):
 
         for invalid_currecy in self.invalid_instructed_amount_currency_list:
-            r = self.v1_payments(instructed_amount_currency=invalid_currecy)
+            r = self.post_v1_payments(instructed_amount_currency=invalid_currecy)
             if r.status_code != 400:
                 print("invalid_currency: {}".format(invalid_currecy))
             assert r.status_code == 400
@@ -166,7 +166,7 @@ class TestPayments(object):
 
     def test_empty_instructed_amount_content(self):
 
-        r = self.v1_payments(instructed_amount_content="")
+        r = self.post_v1_payments(instructed_amount_content="")
 
         assert r.status_code == 400
         assert r.json()["transactionStatus"] == "Rejected"
@@ -174,7 +174,7 @@ class TestPayments(object):
     def test_invalid_instructed_amount_content(self):
 
         for invalid_instructed_amount_content in self.invalid_instructed_amount_content_list:
-            r = self.v1_payments(instructed_amount_content=invalid_instructed_amount_content)
+            r = self.post_v1_payments(instructed_amount_content=invalid_instructed_amount_content)
 
             if r.status_code != 400:
                 print("invalid_instructed_amount_content: {}".format(invalid_instructed_amount_content))
@@ -185,7 +185,7 @@ class TestPayments(object):
     def test_invalid_debtor_account_iban(self):
 
         for invalid_debtor_account_iban in self.invalid_debtor_account_iban_list:
-            r = self.v1_payments(debtor_account_iban=invalid_debtor_account_iban)
+            r = self.post_v1_payments(debtor_account_iban=invalid_debtor_account_iban)
 
             if r.status_code != 400:
                 print("invalid_debtor_account_iban: {}".format(invalid_debtor_account_iban))
@@ -196,7 +196,7 @@ class TestPayments(object):
     def test_invalid_creditor_name(self):
 
         for invalid_creditor_name in self.invalid_creditor_name_list:
-            r = self.v1_payments(creditor_name=invalid_creditor_name)
+            r = self.post_v1_payments(creditor_name=invalid_creditor_name)
 
             if r.status_code != 400:
                 print("invalid_creditor_name: {}".format(invalid_creditor_name))
@@ -209,7 +209,7 @@ class TestPayments(object):
 
             for invalid_iban in self.invalid_debtor_account_iban_list:
 
-                r = self.v1_payments(creditor_account_iban=invalid_iban)
+                r = self.post_v1_payments(creditor_account_iban=invalid_iban)
 
                 if r.status_code != 400:
                     print("invalid_iban: {}".format(invalid_iban))
@@ -217,7 +217,7 @@ class TestPayments(object):
                 assert r.json()["transactionStatus"] == "Rejected"
 
 
-    def v1_payments(
+    def post_v1_payments(
             self,
             product = products[0],
             content_type = valid_content_type,
