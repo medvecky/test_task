@@ -20,12 +20,12 @@ class TestPostPayments(object):
     invalid_content_type = "application/x-www-form-urlencoded"
     invalid_x_request_id = "abc123"
     invalid_x_api_key = "abc123"
-    invalid_tpp_redirect_uri_list = ["abc","ftp://localhost:80"]
+    invalid_tpp_redirect_uri_list = ["abc", "ftp://localhost:80"]
     invalid_psu_ip_address = "a.a.a"
-    invalid_instructed_amount_currency_list = [15,"GO","33","CAT"]
-    invalid_instructed_amount_content_list = [-12,"-13","12.345.670","12,60"]
-    invalid_debtor_account_iban_list = [1234567,"test","1234","abd123"]
-    invalid_creditor_name_list = [123,"XXXXXXXXX",]
+    invalid_instructed_amount_currency_list = [15, "GO", "33", "CAT"]
+    invalid_instructed_amount_content_list = [-12, "-13", "12.345.670", "12,60"]
+    invalid_debtor_account_iban_list = [1234567, "test", "1234", "abd123"]
+    invalid_creditor_name_list = [123, "XXXXXXXXX", ]
 
     def test_happy_paths_for_all_products(self):
 
@@ -46,7 +46,8 @@ class TestPostPayments(object):
     def test_happy_paths_for_all_products_mandatory_params_only(self):
 
         for product in self.products:
-            r = self.post_v1_payments(product=product,debtor_account_iban="",creditor_account_iban="", creditor_name="")
+            r = self.post_v1_payments(product=product, debtor_account_iban="", creditor_account_iban="",
+                                      creditor_name="")
             if r.status_code != 201:
                 error_messages = r.json()["tppMessages"][0]
                 print("Transaction status: {}".format(r.json()["transactionStatus"]))
@@ -204,32 +205,30 @@ class TestPostPayments(object):
             assert r.status_code == 400
             assert r.json()["transactionStatus"] == "Rejected"
 
-
     def test_invalid_creditor_account_iban(self):
 
-            for invalid_iban in self.invalid_debtor_account_iban_list:
+        for invalid_iban in self.invalid_debtor_account_iban_list:
 
-                r = self.post_v1_payments(creditor_account_iban=invalid_iban)
+            r = self.post_v1_payments(creditor_account_iban=invalid_iban)
 
-                if r.status_code != 400:
-                    print("invalid_iban: {}".format(invalid_iban))
-                assert r.status_code == 400
-                assert r.json()["transactionStatus"] == "Rejected"
-
+            if r.status_code != 400:
+                print("invalid_iban: {}".format(invalid_iban))
+            assert r.status_code == 400
+            assert r.json()["transactionStatus"] == "Rejected"
 
     def post_v1_payments(
             self,
-            product = products[0],
-            content_type = valid_content_type,
-            x_request_id = valid_x_request_id,
-            x_api_key = valid_x_api_key,
-            tpp_redirect_uri = valid_tpp_redirect_uri,
-            psu_ip_address = valid_psu_ip_address,
-            instructed_amount_currency = valid_instructed_amount_currency,
-            instructed_amount_content = valid_instructed_amount_content,
-            debtor_account_iban = valid_debtor_account_iban,
-            creditor_name = valid_creditor_name,
-            creditor_account_iban = valid_debtor_account_iban):
+            product=products[0],
+            content_type=valid_content_type,
+            x_request_id=valid_x_request_id,
+            x_api_key=valid_x_api_key,
+            tpp_redirect_uri=valid_tpp_redirect_uri,
+            psu_ip_address=valid_psu_ip_address,
+            instructed_amount_currency=valid_instructed_amount_currency,
+            instructed_amount_content=valid_instructed_amount_content,
+            debtor_account_iban=valid_debtor_account_iban,
+            creditor_name=valid_creditor_name,
+            creditor_account_iban=valid_debtor_account_iban):
 
         return rest_client.post_v1_payments(
             product,

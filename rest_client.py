@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 def post_v1_payments(
         product,
         content_type,
@@ -23,7 +24,7 @@ def post_v1_payments(
     }
     payload = {
         "instructedAmount": {"currency": instructed_amount_currency,
-                                "content": instructed_amount_content},
+                             "content": instructed_amount_content},
         "debtorAccount": {"iban": debtor_account_iban},
         "creditorName": creditor_name,
         "creditorAccount": {"iban": creditor_account_iban},
@@ -31,6 +32,7 @@ def post_v1_payments(
     }
 
     return requests.post(url, data=json.dumps(payload), headers=headers)
+
 
 def get_v1_payments_payment_id(payment_id, x_request_id, x_api_key):
     url = "https://api.tieto.com/v1/payments/{}".format(payment_id)
