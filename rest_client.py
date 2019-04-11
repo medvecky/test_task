@@ -42,3 +42,12 @@ def get_v1_payments_payment_id(payment_id, x_request_id, x_api_key):
     }
 
     return requests.get(url, headers=headers)
+
+def get_v1_payments_payment_id_status(payment_id, x_request_id, x_api_key):
+    url = "https://api.tieto.com/v1/payments/{}/status".format(payment_id)
+    headers = {
+        "X-Request-ID": x_request_id,
+        "X-API-Key": x_api_key
+    }
+
+    return requests.get(url, headers=headers)
