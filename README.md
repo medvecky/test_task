@@ -8,17 +8,23 @@
 
 ## Test run
 * For running all tests
-> pytest
+```
+pytest
+```
 
 * For particular test 
-> putest <file_with_test_class.py>
-
+```
+putest <file_with_test_class.py>
+```
 * For html report generation 
-> pytest --html=report.html
+```
+pytest --html=report.html
+```
 
 or
-
->pytest --html=report.html --self-contained-html
+```
+pytest --html=report.html --self-contained-html
+```
 
 ## Description 
 
@@ -29,18 +35,21 @@ Contains realisations of REST API calls which used in tests
 ### test_post_payments.py
 
 Contains test cases set for 
-> POST https://api.tieto.com/v1/payments
-
+```
+POST https://api.tieto.com/v1/payments
+```
 ### test_get_payments_id.py
 
 Contains test cases set for 
-> GET https://api.tieto.com/v1/payments/{paymentId}
-
+```
+GET https://api.tieto.com/v1/payments/{paymentId}
+```
 ### test_post_payments_id_status.py
 
 Contains test cases set for 
-> GET https://api.tieto.com/v1/payments/{paymentId}/status
-
+```
+GET https://api.tieto.com/v1/payments/{paymentId}/status
+```
 Tests mainly focused on parameters verification. 
 
 For more complicated test cases creation need more information about system logic in common. 
